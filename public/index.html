@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <ul id="posts"></ul>
+        <button id="btn"></button>
+    </div>
+    <script>
+        
+        var xhttp = new XMLHttpRequest();
+
+        // Chercher avec la method GET dans l'API les data en JSON
+
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                loadDoc(JSON.parse(this.responseText));
+            }
+        };
+        xhttp.open("GET", "https://jsonplaceholder.typicode.com/posts");
+        xhttp.send();
+        
+        // Afficher les element HTML ainsi que les valeurs de api
+
+        function loadDoc(posts) {
+            posts.forEach(post => {
+                document.getElementById('posts').innerHTML += `
+                    <p>${post.userId}</p>
+                    <li>${post.title}</li>
+                `; 
+            });
+        }
+    </script>
+</body>
+
+</html>
