@@ -6,35 +6,124 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
     <div>
-        <ul id="posts"></ul>
-        <button id="btn"></button>
+        <input type="text">
+        <input type="submit" formmethod="post" value="send" >
+        <table id="posts" style="width: 100%;">
+            <tr class="table">
+                <th class="table">ID</th>
+                <th class="table">ID utilisateur</th>
+                <th class="table">Titre</th>
+                <th class="table">View</th>
+            </tr>
+        </table>
     </div>
+
     <script>
         
-        var xhttp = new XMLHttpRequest();
+        function getPosts() {
 
-        // Chercher avec la method GET dans l'API les data en JSON
+            var xhttp = new XMLHttpRequest();
 
-        xhttp.onreadystatechange = function () {
-            if (this.readyState == 4 && this.status == 200) {
-                loadDoc(JSON.parse(this.responseText));
-            }
-        };
-        xhttp.open("GET", "https://jsonplaceholder.typicode.com/posts");
-        xhttp.send();
-        
-        // Afficher les element HTML ainsi que les valeurs de api
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    loadDoc(JSON.parse(this.responseText));
+                }
+            };
+
+            xhttp.open("GET", "https://jsonplaceholder.typicode.com/posts");
+            xhttp.send();
+        }
+
+        getPosts();
+
+        // Afficher les element HTML ainsi que les valeurs "posts" de l'api
 
         function loadDoc(posts) {
+
+            var x = document.getElementsByTagName('td');
+            var i;
+            var info = document.getElementsByClassName('viewBtn');
+            var del = document.getElementsByClassName("delete");
+
             posts.forEach(post => {
-                document.getElementById('posts').innerHTML += `
-                    <p>${post.userId}</p>
-                    <li>${post.title}</li>
-                `; 
+                var getter = document.getElementById('posts').innerHTML += `
+                <tr class="table">
+                    <td>${post.id}</td>
+                    <td>${post.userId}</td>
+                    <td>${post.title}</td>
+                    <td><button class="viewBtn" value="${post.body}">view</button><td>
+                    <td><button class="delete" value="${post.id}">delete</button><td>
+                </tr>   
+                `;
+                
+                var deletePost = document.getElementById('posts');
+                deletePost.addEventListener('click', function(id){
+                    getDeletePost(id.target.value);
+                });
+
+                //loops pour implementer les event a touts les buttons "view"
+                for (var i = 0; i < info.length; i++) {
+                    info[i].addEventListener('click', function (event) {
+                        alert(event.target.value);
+                    });
+                };
+                document.getElementById('posts').style.border = " 1px solid black";
             });
+
+            // loops for border tables
+
+            for (var i = 0; i < x.length; i++) {
+                x[i].style.border = "1px solid black";
+                x[i].style.textAlign = "center";
+            };
+        };
+
+
+        function getDeletePost(id) {
+            var xhttp = new XMLHttpRequest();
+
+            // Chercher avec la method GET dans l'API les data en JSON
+            xhttp.open("DELETE", "https://jsonplaceholder.typicode.com/posts/" + id);
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var response = JSON.parse(this.responseText);
+                    deleteRow(id);
+                }
+            };
+            xhttp.send();
+        };
+
+        // Chaque bouton "Supprimer"
+        function deleteRow(id) {
+            var table = document.getElementById('posts');
+            var row = table.rows;
+            var del = document.getElementsByClassName('delete');
+
+                    for (var i = 0; i < del.length; i++) {
+                        var select = row[i].cells[0];
+                        if (select.innerText == id) {
+                            table.deleteRow(i);
+                        }
+                    }
+                
+            }
+
+        function sendPost (){
+            xhttp = new XMLHttpRequest();
+
+            xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("posts").innerHTML = this.responseText;
+                }
+            };
+            xhttp.open("POST", "https://jsonplaceholder.typicode.com/posts");
+            xhttp.send(JSON.stringify({id:" ", userId:" ", title:" ", body:" " }));
         }
+            
+      
     </script>
 </body>
 
