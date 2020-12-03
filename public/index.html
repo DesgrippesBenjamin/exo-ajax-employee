@@ -9,8 +9,14 @@
 
 <body>
     <div>
-        <input type="text">
-        <input type="submit" formmethod="post" value="send" >
+        <form method="post" id="myForm">
+            <input type="number" id="id" name="id" placeholder="ID" min="1" max="200" required>
+            <input type="number" id="userId" name="userId" placeholder="User id" min="1" max="10" required>
+            <input type="text" id="title" name="title" placeholder="title" required>
+            <textarea type="text" id="textAera" name="body" placeholder="Comment" rows="10" cols="30"
+                required></textarea>
+            <input type="submit" value="send" onclick="sendData">
+        </form>
         <table id="posts" style="width: 100%;">
             <tr class="table">
                 <th class="table">ID</th>
@@ -22,7 +28,6 @@
     </div>
 
     <script>
-        
         function getPosts() {
 
             var xhttp = new XMLHttpRequest();
@@ -35,7 +40,7 @@
 
             xhttp.open("GET", "https://jsonplaceholder.typicode.com/posts");
             xhttp.send();
-        }
+        };
 
         getPosts();
 
@@ -58,9 +63,9 @@
                     <td><button class="delete" value="${post.id}">delete</button><td>
                 </tr>   
                 `;
-                
+
                 var deletePost = document.getElementById('posts');
-                deletePost.addEventListener('click', function(id){
+                deletePost.addEventListener('click', function (id) {
                     getDeletePost(id.target.value);
                 });
 
@@ -102,28 +107,52 @@
             var row = table.rows;
             var del = document.getElementsByClassName('delete');
 
-                    for (var i = 0; i < del.length; i++) {
-                        var select = row[i].cells[0];
-                        if (select.innerText == id) {
-                            table.deleteRow(i);
-                        }
-                    }
-                
+            for (var i = 0; i < del.length; i++) {
+                var select = row[i].cells[0];
+                if (select.innerText == id) {
+                    table.deleteRow(i);
+                }
             }
 
-        function sendPost (){
-            xhttp = new XMLHttpRequest();
-
-            xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                document.getElementById("posts").innerHTML = this.responseText;
-                }
-            };
-            xhttp.open("POST", "https://jsonplaceholder.typicode.com/posts");
-            xhttp.send(JSON.stringify({id:" ", userId:" ", title:" ", body:" " }));
         }
-            
-      
+
+        // function sendPost() {
+
+        //     const contactForm = document.getElementById("myForm");
+
+        //     contactForm.addEventListener("submit", function (event) {
+
+        //         event.preventDefault();
+
+        //         var xhttp = new XMLHttpRequest();
+
+        //         xhttp.open("POST", "https://jsonplaceholder.typicode.com/posts", true);
+        //         xhttp.onreadystatechange = function () {
+        //             if (xhttp.readyState === 4 && xhttp.status === 200) {
+        //                 var jsonData = JSON.parse(xhttp.response);
+        //             }
+        //         };
+
+        //         var userId = document.getElementById("userId").value;
+        //         var id = document.getElementById("id").value;
+        //         var title = document.getElementById("title").value;
+        //         var textAera = document.getElementById("textAera").value;
+
+
+        //         var data = JSON.stringify({
+        //             "userId": userId,
+        //             "id": id,
+        //             "title": title,
+        //             "body": textAera
+        //         });
+
+
+        //         xhttp.send(data);
+
+        //     });
+        // };
+        
+
     </script>
 </body>
 
